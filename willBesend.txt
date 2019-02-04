@@ -1,0 +1,230 @@
+Wildcards;
+
+* - matches zero or more character
+-> *.txt
+-> a*
+-> a*.txt
+
+ ? - matches exactly one character
+-> ?.txt
+-> a?
+-> a?.txt
+---------------------------------------------------------------
+More wildcards - character classes;
+
+[] - A character class
+-> without star matches exactly one character between the brackets.
+example;
+ca[ntr]
+ . can
+ . car
+ . cat
+ 
+-> with star matches any of characters included between the bracket
+example;
+ca[nt]*
+ . can
+ . cat
+ . car
+ . candy
+ . catch
+    .
+    .
+
+-> [!] - matches any of the characters NOT included between the brackets.
+Matches exactly one character
+example;
+[!aeiou]* ---> bu harflerden birisi ile başlamayan kelimeler eşleşir.
+ . baseball
+ . cricket
+---------------------------------------------------------------
+Ranges;
+
+-> [a-g]* matches all files start with a,b,c,d,e,f or g
+-> [3-6]* matches all files start with 3,4,5 or 6
+---------------------------------------------------------------
+Named Character Classes;
+
+[[:alpha:]] #alhabetic characters.Both lower and upper case
+[[:alnum:]] #Alphanumeric characters 
+[[:digit:]] #numbers and decimals between 0 - 9
+[[:lower:]] #lower case letter
+[[:space:]] #white spaces
+[[:upper:]] #upper case letter
+---------------------------------------------------------------
+Matching Wildcard pattern;
+
+ \ - escape character.Use if you want to match wildcard character
+-> *\? ---> match all files end with question mark
+---------------------------------------------------------------
+Case statement;
+
+case "$VAR" in 
+	pattern_1)
+		command1
+		;;
+	pattern_2)
+		command2
+		;;
+esac
+
+=> if $1 doesn't match any of then any command will execute	
+---------
+Examples;
+
+case "$1" in
+	start)   --->if first parameter equal start
+		/usr/sbin/sshd
+		;;
+	stop)	 --->if first parameter equal stop
+		kill $(cat /var/run/sshd.pid)
+		;;
+esac	
+
+---------
+
+case "$1" in
+	start|START)   --->if first parameter equal start
+		/usr/sbin/sshd
+		;;
+	stop|STOP)	 --->if first parameter equal stop
+		kill $(cat /var/run/sshd.pid)
+		;;
+	*)	   --->Stands for default case 	
+		echo "Usage: $0 start|stop" ;exit 1
+	;;			
+esac
+
+---------
+
+read -p "Enter y or n: " ANSWER
+
+case "$ANSWER" in
+	[yY] | [yY] [eE] [sS]
+		echo "You answered yes."
+		;;
+	[nN] | [nN] [oO]
+		echo "You answered no."	
+		;;
+	*)
+		echo "Invalid answer!"	
+		;;
+esac					
+---------------------------------------------------------------
+Logging with logger;
+
+-> The syslog standard uses facilities and severities to categorize messages
+Facilities = kern, user, mail, deamon, auth, local0, local1
+Severities = emerg, alert, crit, err, warning, notice, info
+
+=> useage ---> facility.severity  //lcoal0.info, auth.alert, ...
+=> By default ---> user.notice
+
+logger "message"  #default user.notice
+logger -s "message"  # -s: for display on the terminal screen
+logger -p local0.info "message" # -p: set facility.severity
+logger -t slymanscript -p local0.info "message"    # -t: set tag.Set a name to log file for identify inside all logs
+logger -i -t slymanscript "message" # -i: set pid or proccess id to log
+---------------------------------------------------------------
+while loop format;
+
+while [condition_is_true]
+do 
+ command1
+ command2
+   .
+   .
+ #commandn must be change the condition to false
+done   
+------------
+Example - loop 5 times;
+
+INDEX=1
+while[ $INDEX -lt 6]
+do
+ command
+ ((INDEX++))
+done 
+------------
+Example - Checking user input
+
+#while ["$CORRECT" != "y"]  #Parantez içerisinde 1'er boşlık burakmazsan çalışmaz [ expression ] 
+while [ "$CORRECT" != "y" ]
+do
+ read -p "Enter your name : " NAME
+ read -p "Is ${NAME} correct? " CORRECT
+done 
+------------
+Example - Return code 0f command
+
+while ping -c 1 www.google.com >/dev/null
+do
+ echo "google still up..."
+ sleep 1
+done
+ echo  "google down, continuing."
+------------
+
+=> You can make matematical expression between double parantesies
+((VAR+2)
+---------------------------------------------------------------
+Reading a file, line-by-line
+
+LINE_NUM=1
+while read LINE
+do
+ echo "${LINE_NUM} : ${LINE}"
+ ((LINE_NUM++))
+done < /etc/fstab      # /etc/fsteb is the file that you want to read line by line
+-----------------
+Example with one variable;
+
+grep xfs /etc/fstab | while read LINE
+do 
+ echo "xfs: ${LINE}"
+done 
+-----------------
+Example with multiple variable;
+
+grep xfs /etc/fstab | while read WORD1 WORD2 REST
+do 
+ echo "first line: ${WORD1}, ${WORD2} and ${REST}"
+  echo "Then line: ${WORD1}, ${WORD2} and ${REST}"
+done 
+
+=> birden fazla parametre verilirse (WORD1 WORD2 REST) 
+. ilk satırı boşluklar ile böler ve her elemanı array'e atar.
+. Her değişkene array'in elemanlarını sira ile atar
+. Array'in kalan kısmını son değişkene atar.
+---------------------------------------------------------------
+while true
+do
+ read -p "1: Show disk usage. 2: Show uptime. " CHOICE
+ case "$CHOICE" in
+  1)
+   df -h
+   ;;
+  2)
+   uptime
+   ;;
+  *)
+   break
+   ;;
+ esac
+done     
+---------------------------------------------------------------
+BREAK;
+If you want to exit a loop before it's normal ending, use the break statement.
+
+CONTIUE;
+If you want to restart the loop at the next iteration before the loop completes, use the continue statement.
+
+			
+	
+																																			
+
+
+
+
+
+ 

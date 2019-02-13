@@ -461,13 +461,54 @@ If you want to exit a loop before it's normal ending, use the break statement.
 
 CONTIUE;
 If you want to restart the loop at the next iteration before the loop completes, use the continue statement.
+------------------------------------------------------------
+nl FAQ.txt #FAQ.txt file'sindeki her bir satıra numara verir.
+nl FAQ.txt | grep -w 10 # İçerisinde 10 geçen satırları değeri verir. 
+ -w parametresini vermezsek 101,100 gibi içerisinde 10 geçen tüm satırları verir.
 
 ------------------------------------------------------------
+Random numbers;
+brew install coreutils
+
+shuf -i 20-25 #20 ile 25 arasında rnd sayı üretir.
+shuf -i 20-25 -n 1 #20-25 arasında ürettiği rnd sayıları ilkini verir.
+shuf -i 20-25 -n 2 #20-25 arasında ürettiği rnd sayıları ilk ikisini verir.
 ------------------------------------------------------------
+find . -type f -iname FAQ.txt //case-sensetive olmadan arar.
+find . -type f -name FAQ.txt //case-sensetive arar.
+find . -type f -mmin -10 //Files that modified less then 10 min
+find . -type f -mmin +10 //Files that modified more then 10 min
+find . -type f -mmin +10 -mmin -3//Files that modified more then 10 min and less then 3min ago
+Find . -type f -mtime -3 //Files that modified less than 3 day
+
+mmin, mdate // m stand for modified min and date
+amin, adate // a stand for access min and date
+cmin, cdate // a stand for change min and date
+
+find . -size  +5M //files that over 5 megabyte
+find . -size  +5k //files that over 5 kilobyte
+find . -size  +5G //files that over 5 gigabyte
+
+find . -empty //list empty files
+
+find . -perm 777 //files that have permission as 777
+
+MAXDEPTH;
+find . -type f -name "*.jpg" -maxdepth 1 //Sadece current directory'de
+işlem yapar.
+Bir klasördeki tüm jpg file'leri silmek için;
+find . -type f -name "*.jpg" -maxdepth 1 -exec rm {} +
+
+https://www.youtube.com/watch?v=VGgTmxXp7xQ&list=PL-osiE80TeTvGhHkpvfmKWOiIPF8UVy6c&index=4
 ------------------------------------------------------------
+ls -lah //list directory and files with size
 ------------------------------------------------------------
+exec; Sonuçların üzerinde komut execute et demek;
+
+find ~/Desktop -type d exec chmod 775 {} + //Masaüstünde yer 
+Alan tüm directory'lerin permition yetkisini 775 yapar.
 ------------------------------------------------------------
-------------------------------------------------------------
+grep; Global Regular Expression Print
 ------------------------------------------------------------
 ------------------------------------------------------------
 ------------------------------------------------------------
